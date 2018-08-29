@@ -29,7 +29,7 @@ This page is dedicated to resolving common installation issue encountered during
 	
 
 	```sh
-	$ pip install openVunQuery
+	$ pip install openVulnQuery
 	```
 	
 	You can find more information in this [guide to python page](http://docs.python-guide.org/en/latest/dev/virtualenvs/).
