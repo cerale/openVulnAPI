@@ -47,8 +47,10 @@ def main(string_list=None):
 
     topic = api_resource_key
     
-    # adv_format = advisory_format_from_call(args.advisory_format)
-    adv_format = 'cvrf'
+    if api_resource_key == constants.IOS_ADVISORY_FORMAT_TOKEN:
+        adv_format = constants.IOS_ADVISORY_FORMAT_TOKEN
+    else:
+        adv_format = constants.CVRF_ADVISORY_FORMAT_TOKEN
 
     f_cfg = filter_config(
         api_resource_key, args.first_published, args.last_published)

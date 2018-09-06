@@ -25,7 +25,7 @@ DEBUG_TIME_STAMP_FORMAT = "%Y%m%dT%H%M%S.%f"
 
 
 def ensure_adv_format_token(adv_format):
-    """Map cvrf, oval, anything to cvrf, oval, ios - just DRY."""
+    """Map cvrf, anything to cvrf, ios - just DRY."""
     return adv_format if adv_format in ADV_TOKENS else ADV_TOKENS[-1]
 
 
@@ -216,7 +216,7 @@ class OpenVulnQueryClient(object):
         """Converts json into a list of advisory objects.
 
         :param advisories: A list of dictionaries describing advisories.
-        :param adv_format: The target format either in ('cvrf', 'oval') or
+        :param adv_format: The target format in ('cvrf') or
             something that evaluates to False (TODO HACK A DID ACK ?) for ios.
         :return list of advisory instances
         """
