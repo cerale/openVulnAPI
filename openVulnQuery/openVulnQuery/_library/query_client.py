@@ -80,24 +80,22 @@ class OpenVulnQueryClient(object):
     def get_by_all(self, adv_format, all_adv, a_filter):
         """Return all the advisories using requested advisory format"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
-            'all': all_adv,
             'filter': a_filter.path,
         }
-        req_path = "{adv_format}/{all}/{filter}".format(**req_cfg)
+        req_path = "all/{filter}".format(**req_cfg)
         advisories = self.get_request(req_path, a_filter.params)
         return self.advisory_list(advisories['advisories'], adv_format)
 
-    def get_by_cve(self, adv_format, cve, a_filter=None):
+    def get_by_cve(self, adv_format, cve_id, a_filter=None):
         """Return the advisory using requested cve id"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
-            'cve': cve,
+            'cve_id': cve_id,
         }
-        req_path = "{adv_format}/cve/{cve}".format(**req_cfg)
+        req_path = "cve/{cve_id}".format(**req_cfg)
         advisories = self.get_request(req_path)
         return self.advisory_list(advisories['advisories'], adv_format)
 
+    # TODO: figure out what's wrong with get by advisory
     def get_by_advisory(self, adv_format, an_advisory, a_filter=None):
         """Return the advisory using requested advisory id"""
         req_cfg = {
@@ -111,11 +109,10 @@ class OpenVulnQueryClient(object):
     def get_by_severity(self, adv_format, severity, a_filter=None):
         """Return the advisories using requested severity"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
             'severity': severity,
             'filter': Filter().path if a_filter is None else a_filter.path,
         }
-        req_path = ("{adv_format}/severity/{severity}/{filter}"
+        req_path = ("severity/{severity}/{filter}"
                     "".format(**req_cfg))
         advisories = self.get_request(req_path, params=a_filter.params)
         return self.advisory_list(advisories['advisories'], adv_format)
@@ -123,23 +120,22 @@ class OpenVulnQueryClient(object):
     def get_by_year(self, adv_format, year, a_filter=None):
         """Return the advisories using requested year"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
             'year': year,
         }
-        req_path = "{adv_format}/year/{year}".format(**req_cfg)
+        req_path = "year/{year}".format(**req_cfg)
         advisories = self.get_request(req_path)
         return self.advisory_list(advisories['advisories'], adv_format)
 
     def get_by_latest(self, adv_format, latest, a_filter=None):
         """Return the advisories using requested latest"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
             'latest': latest,
         }
-        req_path = "{adv_format}/latest/{latest}".format(**req_cfg)
+        req_path = "latest/{latest}".format(**req_cfg)
         advisories = self.get_request(req_path)
         return self.advisory_list(advisories['advisories'], adv_format)
 
+    #TODO: This one doesn't work either --url not accp
     def get_by_product(self, adv_format, product_name, a_filter=None):
         """Return advisories by product name"""
         req_cfg = {

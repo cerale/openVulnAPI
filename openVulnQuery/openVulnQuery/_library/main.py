@@ -46,7 +46,9 @@ def main(string_list=None):
     api_resource_key, api_resource_value = args.api_resource
 
     topic = api_resource_key
-    adv_format = advisory_format_from_call(args.advisory_format)
+    
+    # adv_format = advisory_format_from_call(args.advisory_format)
+    adv_format = 'cvrf'
 
     f_cfg = filter_config(
         api_resource_key, args.first_published, args.last_published)

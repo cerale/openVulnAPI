@@ -94,19 +94,6 @@ class CVRF(Advisory):
         super(CVRF, self).__init__(*args, **kwargs)
 
 
-class OVAL(Advisory):
-    """OVAL object as an Advisory"""
-
-    def __init__(self, *args, **kwargs):
-        self.oval_url = kwargs.pop('oval_url', None)
-        self.ips_signatures = []
-        if IPS_SIG in kwargs:
-            self.ips_signatures = [
-                IPSSignature(**kw) if not is_unicode_or_bytes(kw) else NA
-                for kw in kwargs.pop(IPS_SIG)]
-        super(OVAL, self).__init__(*args, **kwargs)
-
-
 class AdvisoryIOS(Advisory):
     """Advisory Object with additional information on IOS/IOSXE version """
 
@@ -130,7 +117,7 @@ class IPSSignature(Filterable):
 def advisory_format_factory_map():
     """Map the advisory format tokens to callable instantiators."""
     return dict(zip(
-        constants.ADVISORY_FORMAT_TOKENS, (CVRF, OVAL, AdvisoryIOS)))
+        constants.ADVISORY_FORMAT_TOKENS, (CVRF, AdvisoryIOS)))
 
 
 def advisory_factory(adv_data, adv_format, logger):
