@@ -25,7 +25,6 @@ DEBUG_TIME_STAMP_FORMAT = "%Y%m%dT%H%M%S.%f"
 
 
 def ensure_adv_format_token(adv_format):
-    """Map cvrf, anything to cvrf, ios - just DRY."""
     return adv_format if adv_format in ADV_TOKENS else ADV_TOKENS[-1]
 
 
@@ -99,11 +98,10 @@ class OpenVulnQueryClient(object):
     def get_by_advisory(self, adv_format, an_advisory, a_filter=None):
         """Return the advisory using requested advisory id"""
         req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
             'advisory': an_advisory,
         }
-        req_path = "{adv_format}/advisory/{advisory}".format(**req_cfg)
-        advisories = {'advisories': [self.get_request(req_path)]}
+        req_path = "advisory/{advisory}".format(**req_cfg)
+        advisories = self.get_request(req_path)
         return self.advisory_list(advisories['advisories'], adv_format)
 
     def get_by_severity(self, adv_format, severity, a_filter=None):
@@ -135,13 +133,13 @@ class OpenVulnQueryClient(object):
         advisories = self.get_request(req_path)
         return self.advisory_list(advisories['advisories'], adv_format)
 
-    #TODO: This one doesn't work either --url not accp
+    #TODO: It was discovered that the endpoint url in the documentation
+    #is incorrect. get_by_product should work AFTER the endpoint url path
+    # is properly edited to match the documentation; that is, to /security/advisories/product
+    # instead of the old /cvrf /oval urls. 
     def get_by_product(self, adv_format, product_name, a_filter=None):
         """Return advisories by product name"""
-        req_cfg = {
-            'adv_format': ensure_adv_format_token(adv_format),
-        }
-        req_path = "{adv_format}/product".format(**req_cfg)
+        req_path = "product"
         advisories = self.get_request(
             req_path, params={'product': product_name})
         return self.advisory_list(advisories['advisories'], adv_format)
@@ -216,7 +214,7 @@ class OpenVulnQueryClient(object):
         """Converts json into a list of advisory objects.
 
         :param advisories: A list of dictionaries describing advisories.
-        :param adv_format: The target format in ('cvrf') or
+        :param adv_format: The target format in default format or
             something that evaluates to False (TODO HACK A DID ACK ?) for ios.
         :return list of advisory instances
         """

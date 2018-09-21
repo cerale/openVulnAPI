@@ -25,11 +25,6 @@ IPS_SIG_MAP = {
     IPS_SIG: 'ipsSignatures',
 }
 
-CVRF_URL_TOKEN = 'cvrf_url'
-CVRF_URL_MAP = {
-    CVRF_URL_TOKEN: 'cvrfUrl',
-}
-
 IOS_ADD_ONS_MAP = {
     'first_fixed': 'firstFixed',
     'ios_release': 'iosRelease',
@@ -76,17 +71,16 @@ class Advisory(Filterable):
         self.summary = summary
 
 
-class CVRF(Advisory):
-    """CVRF object inherits from Advisory"""
+class AdvisoryDefault(Advisory):
+    """Default object inherits from Advisory"""
 
     def __init__(self, *args, **kwargs):
-        self.cvrf_url = kwargs.pop('cvrf_url', None)
         self.ips_signatures = []
         if IPS_SIG in kwargs:
             self.ips_signatures = [
                 IPSSignature(**kw) if not is_unicode_or_bytes(kw) else NA
                 for kw in kwargs.pop(IPS_SIG)]
-        super(CVRF, self).__init__(*args, **kwargs)
+        super(AdvisoryDefault, self).__init__(*args, **kwargs)
 
 
 class AdvisoryIOS(Advisory):
@@ -95,7 +89,6 @@ class AdvisoryIOS(Advisory):
     def __init__(self, *args, **kwargs):
         self.first_fixed = kwargs.pop('first_fixed', None)
         self.ios_release = kwargs.pop('ios_release', None)
-        self.cvrf_url = kwargs.pop('cvrf_url', None)
         super(AdvisoryIOS, self).__init__(*args, **kwargs)
 
 
@@ -111,13 +104,13 @@ class IPSSignature(Filterable):
 def advisory_format_factory_map():
     """Map the advisory format tokens to callable instantiators."""
     return dict(zip(
-        constants.ADVISORY_FORMAT_TOKENS, (CVRF, AdvisoryIOS)))
+        constants.ADVISORY_FORMAT_TOKENS, (AdvisoryDefault, AdvisoryIOS)))
 
 
 def advisory_factory(adv_data, adv_format, logger):
     """Converts json into a list of advisory objects.
     :param adv_data: A dictionary describing an advisory.
-    :param adv_format: The target format in ('cvrf', 'ios')
+    :param adv_format: The target format in ('default', 'ios')
     :param logger: A logger (for now expecting to be ready to log)
     :returns advisory instance according to adv_format
     """
@@ -126,8 +119,7 @@ def advisory_factory(adv_data, adv_format, logger):
     for k, v in ADVISORIES_COMMONS_MAP.items():
         adv_map[k] = adv_data[v]
 
-    if adv_format == constants.CVRF_ADVISORY_FORMAT_TOKEN:
-        adv_map['cvrf_url'] = adv_data["cvrfUrl"]  # Variant::Union
+    if adv_format == constants.DEFAULT_ADVISORY_FORMAT_TOKEN:
         for k, v in IPS_SIG_MAP.items():
             adv_map[k] = adv_data[v]
     else:  # IOS advisory format targeted:

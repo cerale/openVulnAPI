@@ -5,7 +5,6 @@ API_LABELS = (
     'advisory_title',
     'bug_ids',
     'cves',
-    'cvrf_url',
     'cvss_base_score',
     'cwe',
     'first_fixed',
@@ -36,10 +35,10 @@ NA_INDICATOR = 'NA'
 JSON_OUTPUT_FORMAT_TOKEN = 'json'
 CSV_OUTPUT_FORMAT_TOKEN = 'csv'
 
-CVRF_ADVISORY_FORMAT_TOKEN = 'cvrf'
+DEFAULT_ADVISORY_FORMAT_TOKEN = 'default'
 IOS_ADVISORY_FORMAT_TOKEN = 'ios'
 
 ADVISORY_FORMAT_TOKENS = (
-    CVRF_ADVISORY_FORMAT_TOKEN,
+    DEFAULT_ADVISORY_FORMAT_TOKEN,
     IOS_ADVISORY_FORMAT_TOKEN,
 )

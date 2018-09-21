@@ -48,7 +48,7 @@ CLI_API_API_RESOURCE = (
         'action': 'store_const',
         'const': ('all', 'all'),
         'dest': 'api_resource',
-        'help': 'Retrieve all cvrf/oval advisiories',
+        'help': 'Retrieve all advisiories',
         'tokens': ('--all',),
     },
     {
@@ -67,7 +67,7 @@ CLI_API_API_RESOURCE = (
     },
     {
         'dest': 'api_resource',
-        'help': 'Retrieve latest (number) of advisories',
+        'help': 'Retrieve latest (number) advisories',
         'metavar': 'number',
         'tokens': ('--latest',),
         'type': (lambda x: ('latest', x)),
