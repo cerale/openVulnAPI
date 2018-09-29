@@ -42,33 +42,13 @@ def valid_date(date_text):
 #     },
 # )  # Above structures can be fed into argparse parser construction.
 
-CLI_API_ADVISORY_FORMAT = (
-    {
-        'action': 'store_const',
-        'const': constants.CVRF_ADVISORY_FORMAT_TOKEN,
-        'dest': 'advisory_format',
-        'help': (
-            'Selects from cvrf advisories, required except for ios and ios_xe'
-            ' query'),
-        'tokens': ('--cvrf',),
-    },
-    {
-        'action': 'store_const',
-        'const': constants.OVAL_ADVISORY_FORMAT_TOKEN,
-        'dest': 'advisory_format',
-        'help': (
-            'Selects from oval advisories, required except for ios and ios_xe'
-            ' query'),
-        'tokens': ('--oval',),
-    },
-)
 
 CLI_API_API_RESOURCE = (
     {
         'action': 'store_const',
         'const': ('all', 'all'),
         'dest': 'api_resource',
-        'help': 'Retrieve all cvrf/oval advisiories',
+        'help': 'Retrieve all advisiories',
         'tokens': ('--all',),
     },
     {
@@ -87,7 +67,7 @@ CLI_API_API_RESOURCE = (
     },
     {
         'dest': 'api_resource',
-        'help': 'Retrieve latest (number) of advisories',
+        'help': 'Retrieve latest (number) advisories',
         'metavar': 'number',
         'tokens': ('--latest',),
         'type': (lambda x: ('latest', x)),
@@ -244,9 +224,6 @@ def parser_factory():
         description='Cisco OpenVuln API Command Line Interface')
     p.set_defaults(output_format=(constants.JSON_OUTPUT_FORMAT_TOKEN, None))
 
-    add_options_to_parser(
-        p.add_mutually_exclusive_group(required=False),
-        CLI_API_ADVISORY_FORMAT)
 
     add_options_to_parser(
         p.add_mutually_exclusive_group(required=True), CLI_API_API_RESOURCE)
@@ -271,11 +248,6 @@ def process_command_line(string_list=None):
     parser = parser_factory()
 
     args = parser.parse_args(args=string_list)
-    if not args.advisory_format:
-        key, val = args.api_resource
-        if key not in ['ios', 'ios_xe']:
-            parser.error('Advisory format --cvrf or --oval required except for'
-                         ' ios and ios_xe')
 
     if args.api_resource[0] not in constants.ALLOWS_FILTER:
         if args.first_published or args.last_published:
